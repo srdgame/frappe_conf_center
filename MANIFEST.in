@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include conf_center *.css
+recursive-include conf_center *.csv
+recursive-include conf_center *.html
+recursive-include conf_center *.ico
+recursive-include conf_center *.js
+recursive-include conf_center *.json
+recursive-include conf_center *.md
+recursive-include conf_center *.png
+recursive-include conf_center *.py
+recursive-include conf_center *.svg
+recursive-include conf_center *.txt
+recursive-exclude conf_center *.pyc
