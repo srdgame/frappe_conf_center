@@ -1,6 +1,8 @@
 .DS_Store
+.idea
 *.pyc
 *.egg-info
 *.swp
 tags
 conf_center/docs/current
+*~
