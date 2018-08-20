@@ -13,14 +13,12 @@ from iot.iot.user_api import valid_auth_code
 
 
 @frappe.whitelist(allow_guest=True)
-def upload_conf_version(app, conf, version, data):
+def upload_conf_version(sn, app, conf, version, data):
 	valid_auth_code()
-	if conf[0:4] != "CNF.":
-		conf = frappe.db.get_value("IOT Application Conf", {"app": app, "conf_name": conf})
 	version_data = {
 		"doctype": "IOT Application Conf Version",
 		"app": app,
-		"conf_name": conf,
+		"conf": conf,
 		"version": version,
 		"data": data
 	}
@@ -28,10 +26,7 @@ def upload_conf_version(app, conf, version, data):
 
 
 @frappe.whitelist(allow_guest=True)
-def app_conf_version(app, conf):
-	if conf[0:4] != "CNF.":
-		conf = frappe.db.get_value("IOT Application Conf", {"app": app, "conf_name": conf})
-
+def app_conf_version(sn, app, conf):
 	vlist = [d[0] for d in frappe.db.get_values("IOT Application Conf Version", conf, "version")]
 	if not vlist:
 		return None
@@ -40,9 +35,6 @@ def app_conf_version(app, conf):
 
 @frappe.whitelist(allow_guest=True)
 def app_conf_data(app, conf, version):
-	if conf[0:4] != "CNF.":
-		conf = frappe.db.get_value("IOT Application Conf", {"app": app, "conf_name": conf})
-
 	return frappe.db.get_values("IOT Application Conf Version", conf, {"data", "version"})
 
 
