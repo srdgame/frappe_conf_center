@@ -129,7 +129,7 @@
    "read_only": 0, 
    "remember_last_selected_value": 0, 
    "report_hide": 0, 
-   "reqd": 0, 
+   "reqd": 1, 
    "search_index": 0, 
    "set_only_once": 0, 
    "unique": 0
@@ -207,7 +207,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-08-17 19:54:23.559421", 
+ "modified": "2018-08-20 16:31:53.690522", 
  "modified_by": "Administrator", 
  "module": "Conf Center", 
  "name": "IOT Device Conf", 
