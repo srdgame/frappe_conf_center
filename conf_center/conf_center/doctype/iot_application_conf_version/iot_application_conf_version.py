@@ -13,3 +13,5 @@ class IOTApplicationConfVersion(Document):
 		app = frappe.get_value("IOT Application Conf", self.conf, "app")
 		self.app_name = frappe.get_value("IOT Application", app, "app_name")
 
+		if not self.is_new():
+			self.data = frappe.get_value("IOT Application Conf Version", self.name, "data")
