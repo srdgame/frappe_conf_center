@@ -8,8 +8,7 @@ import os
 import requests
 from frappe import throw, msgprint, _
 from frappe.utils import now, get_datetime, convert_utc_to_user_timezone
-from werkzeug.utils import secure_filename
-from iot.iot.user_api import valid_auth_code
+from iot.user_api import valid_auth_code
 
 
 @frappe.whitelist(allow_guest=True)
@@ -35,7 +34,14 @@ def app_conf_version(sn, app, conf):
 
 @frappe.whitelist(allow_guest=True)
 def app_conf_data(app, conf, version):
-	return frappe.db.get_values("IOT Application Conf Version", { "conf": conf, "version": version }, {"data", "version"})
+	ver = frappe.get_value("IOT Application Conf Version", filters={"conf": conf, "version": int(version)})
+	if not ver:
+		return {"version": -1, "data": ""}
+	doc = frappe.get_doc("IOT Application Conf Version", ver)
+	return {
+		"data": doc.data,
+		"version": doc.version
+	}
 
 
 @frappe.whitelist(allow_guest=True)
