@@ -6,5 +6,10 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 
+
 class IOTApplicationConfVersion(Document):
-	pass
+	def validate(self):
+		self.app_conf_name = frappe.get_value("IOT Application Conf", self.conf, "conf_name")
+		app = frappe.get_value("IOT Application Conf", self.conf, "app")
+		self.app_name = frappe.get_value("IOT Application", app, "app_name")
+
