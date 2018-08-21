@@ -35,7 +35,7 @@ def app_conf_version(sn, app, conf):
 
 @frappe.whitelist(allow_guest=True)
 def app_conf_data(app, conf, version):
-	return frappe.db.get_values("IOT Application Conf Version", conf, {"data", "version"})
+	return frappe.db.get_values("IOT Application Conf Version", { "conf": conf, "version": version }, {"data", "version"})
 
 
 @frappe.whitelist(allow_guest=True)
@@ -53,7 +53,11 @@ def dev_conf(sn, timestamp, data, md5):
 	doc = frappe.get_doc(dev_conf).insert()
 
 
-
 @frappe.whitelist(allow_guest=True)
 def dev_conf_content(sn):
 	return ""
+
+
+@frappe.whitelist(allow_guest=True)
+def ping():
+	return _("pong")
