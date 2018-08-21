@@ -70,7 +70,7 @@
    "report_hide": 0, 
    "reqd": 1, 
    "search_index": 1, 
-   "set_only_once": 0, 
+   "set_only_once": 1, 
    "unique": 0
   }, 
   {
@@ -219,7 +219,7 @@
    "report_hide": 0, 
    "reqd": 1, 
    "search_index": 0, 
-   "set_only_once": 0, 
+   "set_only_once": 1, 
    "unique": 0
   }, 
   {
@@ -263,7 +263,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-08-21 12:28:46.497011", 
+ "modified": "2018-08-21 14:55:12.993223", 
  "modified_by": "Administrator", 
  "module": "Conf Center", 
  "name": "IOT Application Conf Version", 
