@@ -56,6 +56,31 @@ def app_conf_data(app, conf, version):
 	}
 
 
+app_conf_fields = ["name", "conf_name", "description", "type", "owner_type", "owner_id"]
+
+
+@frappe.whitelist(allow_guest=True)
+def list_app_conf(app, filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
+	filters = filters or {}
+	filters.update({
+		"app": app,
+		"owner": ["!=", 'Administrator'],
+		"public": 1,
+	})
+
+	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+
+
+@frappe.whitelist(allow_guest=True)
+def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
+	filters = filters or {}
+	filters.update({
+		"app": app,
+		"owner": ["=", frappe.session.user]
+	})
+
+	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+
 
 @frappe.whitelist(allow_guest=True)
 def upload_device_conf(conf=None):
