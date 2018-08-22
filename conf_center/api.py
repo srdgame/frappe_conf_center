@@ -62,10 +62,6 @@ def upload_device_conf(conf=None):
 	# valid_auth_code()
 	conf = conf or get_post_json_data()
 
-	dev = frappe.get_doc("IOT Device", conf.get("sn"))
-	if not dev:
-		throw(_("Device not found!"))
-
 	ts = datetime.datetime.utcfromtimestamp(int(conf.get("timestamp")))
 	ts = convert_utc_to_user_timezone(ts).replace(tzinfo=None)
 	dev_conf = {
@@ -73,9 +69,7 @@ def upload_device_conf(conf=None):
 		"device": conf.get("sn"),
 		"timestamp": ts,
 		"data": conf.get("data"),
-		"hashing": conf.get("md5"),
-		"owner_type": dev.owner_type,
-		"owner_id": dev.owner_id,
+		"hashing": conf.get("md5")
 	}
 	doc = frappe.get_doc(dev_conf).insert(ignore_permissions=True)
 
