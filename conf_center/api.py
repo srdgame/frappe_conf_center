@@ -4,11 +4,23 @@
 
 from __future__ import unicode_literals
 import frappe
-import os
-import requests
+import json
+import datetime
 from frappe import throw, msgprint, _
 from frappe.utils import now, get_datetime, convert_utc_to_user_timezone
 from iot.user_api import valid_auth_code
+
+
+def get_post_json_data():
+	if frappe.request.method != "POST":
+		throw(_("Request Method Must be POST!"))
+	ctype = frappe.get_request_header("Content-Type")
+	if "json" not in ctype.lower():
+		throw(_("Incorrect HTTP Content-Type found {0}").format(ctype))
+	data = frappe.request.get_data()
+	if not data:
+		throw(_("JSON Data not found!"))
+	return json.loads(data)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -44,24 +56,42 @@ def app_conf_data(app, conf, version):
 	}
 
 
-@frappe.whitelist(allow_guest=True)
-def dev_conf(sn, timestamp, data, md5):
-	if frappe.request.method != "POST":
-		throw(_("Request Method Must be POST!"))
 
+@frappe.whitelist(allow_guest=True)
+def upload_device_conf(conf=None):
+	# valid_auth_code()
+	conf = conf or get_post_json_data()
+
+	dev = frappe.get_doc("IOT Device", conf.get("sn"))
+	if not dev:
+		throw(_("Device not found!"))
+
+	ts = datetime.datetime.utcfromtimestamp(int(conf.get("timestamp")))
+	ts = convert_utc_to_user_timezone(ts).replace(tzinfo=None)
 	dev_conf = {
 		"doctype": "IOT Device Conf",
-		"device": sn,
-		"timestamp": get_datetime(timestamp),
-		"data": data,
-		"hashing": md5
+		"device": conf.get("sn"),
+		"timestamp": ts,
+		"data": conf.get("data"),
+		"hashing": conf.get("md5"),
+		"owner_type": dev.owner_type,
+		"owner_id": dev.owner_id,
 	}
-	doc = frappe.get_doc(dev_conf).insert()
+	doc = frappe.get_doc(dev_conf).insert(ignore_permissions=True)
 
 
 @frappe.whitelist(allow_guest=True)
-def dev_conf_content(sn):
-	return ""
+def device_conf_data(name):
+	doc = frappe.get_doc("IOT Device Conf", name)
+	if not doc:
+		throw(_("Device Conf Data not exits!"))
+
+	return {
+		"device": doc.device,
+		"timestamp": doc.timestamp,
+		"data": doc.data,
+		"md5": doc.hashing
+	}
 
 
 @frappe.whitelist(allow_guest=True)
