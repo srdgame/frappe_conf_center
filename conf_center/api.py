@@ -39,10 +39,13 @@ def upload_conf_version(sn, app, conf, version, data):
 
 @frappe.whitelist(allow_guest=True)
 def app_conf_version(sn, app, conf):
-	vlist = [d[0] for d in frappe.db.get_values("IOT Application Conf Version", conf, "version")]
-	if not vlist:
-		return None
-	return max(vlist)
+	from conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
+	return get_latest_version(conf)
+
+
+@frappe.whitelist(allow_guest=True)
+def app_conf_version_list(sn, app, conf):
+	return frappe.get_all("IOT Application Conf Version", {"conf": conf}, "version")
 
 
 @frappe.whitelist(allow_guest=True)
@@ -125,6 +128,11 @@ def device_conf_data(name):
 		"data": doc.data,
 		"md5": doc.hashing
 	}
+
+
+@frappe.whitelist(allow_guest=True)
+def device_conf_list(sn):
+	return frappe.get_all("IOT Device Conf", {"device": sn}, ["name", "timestamp", "data", "hashing"])
 
 
 @frappe.whitelist(allow_guest=True)
