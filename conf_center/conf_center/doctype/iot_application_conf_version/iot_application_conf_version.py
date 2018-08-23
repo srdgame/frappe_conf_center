@@ -28,5 +28,5 @@ def on_doctype_update():
 
 
 def get_latest_version(conf):
-	sql = "select max(version) from `tabIOT Application Conf Version` where name='{0}'".format(conf)
+	sql = "select max(version) from `tabIOT Application Conf Version` where conf='{0}'".format(conf)
 	return frappe.db.sql(sql)[0][0]
