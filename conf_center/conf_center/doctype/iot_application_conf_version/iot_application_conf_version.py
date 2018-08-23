@@ -15,3 +15,8 @@ class IOTApplicationConfVersion(Document):
 
 		if not self.is_new():
 			self.data = frappe.get_value("IOT Application Conf Version", self.name, "data")
+
+
+def on_doctype_update():
+	"""Add indexes in `IOT Application Conf Version`"""
+	frappe.db.add_index("IOT Application Conf Version", ["conf", "version"])
