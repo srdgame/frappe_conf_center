@@ -41,7 +41,7 @@
    "remember_last_selected_value": 0, 
    "report_hide": 0, 
    "reqd": 1, 
-   "search_index": 1, 
+   "search_index": 0,
    "set_only_once": 1, 
    "unique": 0
   }, 
