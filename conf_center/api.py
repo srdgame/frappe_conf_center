@@ -25,7 +25,7 @@ def get_post_json_data():
 
 
 @frappe.whitelist(allow_guest=True)
-def upload_conf_version(sn, app, conf, version, data):
+def upload_conf_version(app, conf, version, data):
 	valid_auth_code()
 	version_data = {
 		"doctype": "IOT Application Conf Version",
@@ -35,16 +35,17 @@ def upload_conf_version(sn, app, conf, version, data):
 		"data": data
 	}
 	doc = frappe.get_doc(version_data).insert()
+	return True
 
 
 @frappe.whitelist(allow_guest=True)
-def app_conf_version(sn, app, conf):
+def app_conf_version(app, conf):
 	from conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
 	return get_latest_version(conf)
 
 
 @frappe.whitelist(allow_guest=True)
-def app_conf_version_list(sn, app, conf):
+def app_conf_version_list(app, conf):
 	return frappe.get_all("IOT Application Conf Version", {"conf": conf}, "version")
 
 
@@ -114,6 +115,7 @@ def upload_device_conf(conf=None):
 		"hashing": conf.get("md5")
 	}
 	doc = frappe.get_doc(dev_conf).insert(ignore_permissions=True)
+	return True
 
 
 @frappe.whitelist(allow_guest=True)
