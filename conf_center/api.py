@@ -10,6 +10,7 @@ from frappe import throw, msgprint, _
 from frappe.utils import now, get_datetime, convert_utc_to_user_timezone
 from iot.user_api import valid_auth_code
 from cloud.cloud.doctype.cloud_company.cloud_company import list_user_companies
+from cloud.cloud.doctype.cloud_company_group.cloud_company_group import list_user_groups
 
 
 def get_post_json_data():
@@ -84,7 +85,7 @@ def create_app_conf(app, conf_name, description, type='Template', owner_type='Us
 	return doc.name
 
 
-app_conf_fields = ["name", "conf_name", "description", "type", "owner_type", "owner_id"]
+app_conf_fields = ["app", "name", "conf_name", "description", "type", "owner_type", "owner_id"]
 
 
 @frappe.whitelist(allow_guest=True)
@@ -111,13 +112,33 @@ def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modif
 
 
 @frappe.whitelist()
-def list_app_conf_company_pri(app, filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
+def list_private_conf(filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
+	filters = filters or {}
+	filters.update({
+		"owner_id": ["=", frappe.session.user]
+	})
+
+	pri_list = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+
+	groups = list_user_groups()
+	filters.update({
+		"owner_id": ["in", groups]
+	})
+	group_list = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+
+	return {
+		"private": pri_list,
+		"company": group_list,
+	}
+
+
+@frappe.whitelist()
+def list_conf_company_pri(filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
 	filters = filters or {}
 	companies = list_user_companies()
 
 	filters.update({
-		"app": app,
-		"owner_id": ["in", companies]
+		"owner_company": ["in", companies]
 	})
 
 	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
