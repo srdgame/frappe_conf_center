@@ -92,7 +92,7 @@ def list_app_conf(app, filters=None, fields=app_conf_fields, order_by="modified 
 	filters = filters or {}
 	filters.update({
 		"app": app,
-		"owner": ["!=", 'Administrator'],
+		"owner_id": ["!=", 'Administrator'],
 		"public": 1,
 	})
 
@@ -104,7 +104,7 @@ def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modif
 	filters = filters or {}
 	filters.update({
 		"app": app,
-		"owner": ["=", frappe.session.user]
+		"owner_id": ["=", frappe.session.user]
 	})
 
 	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
@@ -117,7 +117,7 @@ def list_app_conf_company_pri(app, filters=None, fields=app_conf_fields, order_b
 
 	filters.update({
 		"app": app,
-		"owner": ["in", companies]
+		"owner_id": ["in", companies]
 	})
 
 	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
