@@ -61,6 +61,29 @@ def app_conf_data(app, conf, version):
 	}
 
 
+@frappe.whitelist(allow_guest=True)
+def create_app_conf(app, conf_name, description, type='Template', owner_type='User', owner_id=None, public=1):
+	valid_auth_code()
+	if owner_type == "User":
+		owner_id = frappe.session.user
+
+	if public is True:
+		public = 1
+
+	conf_data = {
+		"doctype": "IOT Application Conf",
+		"app": app,
+		"conf_name": conf_name,
+		"description": description,
+		"type": type,
+		"owner_type": owner_type,
+		"owner_id": owner_id,
+		"public": public
+	}
+	doc = frappe.get_doc(conf_data).insert()
+	return doc.name
+
+
 app_conf_fields = ["name", "conf_name", "description", "type", "owner_type", "owner_id"]
 
 
@@ -76,7 +99,7 @@ def list_app_conf(app, filters=None, fields=app_conf_fields, order_by="modified 
 	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
 	filters = filters or {}
 	filters.update({
@@ -87,7 +110,7 @@ def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modif
 	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def list_app_conf_company_pri(app, filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
 	filters = filters or {}
 	companies = list_user_companies()
@@ -102,7 +125,7 @@ def list_app_conf_company_pri(app, filters=None, fields=app_conf_fields, order_b
 
 @frappe.whitelist(allow_guest=True)
 def upload_device_conf(conf=None):
-	# valid_auth_code()
+	valid_auth_code()
 	conf = conf or get_post_json_data()
 
 	ts = datetime.datetime.utcfromtimestamp(int(conf.get("timestamp")))
