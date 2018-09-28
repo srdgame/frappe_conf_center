@@ -120,7 +120,7 @@ def list_private_conf(filters=None, fields=app_conf_fields, order_by="modified d
 
 	pri_list = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
 
-	groups = list_user_groups(frappe.session.user)
+	groups = [d.name for d in list_user_groups(frappe.session.user)]
 	filters.update({
 		"owner_id": ["in", groups]
 	})
