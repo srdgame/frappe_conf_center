@@ -111,6 +111,17 @@ def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modif
 	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
 
 
+def add_more_info(conf):
+	version = app_conf_version(conf.app, conf.name)
+	version_creation = frappe.get_value("IOT Application Conf Version", {"conf": conf.name, "version": version}, "creation")
+	app_name = frappe.get_value("IOT Application", conf.app, "app_name")
+	conf.update({
+		"latest_version": version,
+		"latest_version_creation": version_creation,
+		"app_name": app_name
+	})
+
+
 @frappe.whitelist()
 def list_private_conf(filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
 	filters = filters or {}
@@ -125,6 +136,9 @@ def list_private_conf(filters=None, fields=app_conf_fields, order_by="modified d
 		"owner_id": ["in", groups]
 	})
 	group_list = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+
+	pri_list = [add_more_info(d) for d in pri_list]
+	group_list = [add_more_info(d) for d in group_list]
 
 	return {
 		"private": pri_list,
