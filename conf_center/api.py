@@ -120,6 +120,7 @@ def add_more_info(conf):
 		"latest_version_creation": version_creation,
 		"app_name": app_name
 	})
+	return conf
 
 
 @frappe.whitelist()
