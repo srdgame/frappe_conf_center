@@ -26,13 +26,13 @@ def get_post_json_data():
 
 
 @frappe.whitelist(allow_guest=True)
-def upload_conf_version(app, conf, version, data):
+def upload_conf_version(conf, version, data, comment=None):
 	valid_auth_code()
 	version_data = {
 		"doctype": "IOT Application Conf Version",
-		"app": app,
 		"conf": conf,
 		"version": version,
+		"comment": comment,
 		"data": data
 	}
 	doc = frappe.get_doc(version_data).insert()
@@ -40,18 +40,19 @@ def upload_conf_version(app, conf, version, data):
 
 
 @frappe.whitelist(allow_guest=True)
-def app_conf_version(app, conf):
+def get_latest_version(conf):
 	from conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
 	return get_latest_version(conf)
 
 
 @frappe.whitelist(allow_guest=True)
-def app_conf_version_list(app, conf):
-	return frappe.get_all("IOT Application Conf Version", {"conf": conf}, "version")
+def get_versions(conf):
+	conf_version_fields = ["name", "version", "app_name", "app_conf_name", "comment", "creation", "owner"]
+	return frappe.get_all("IOT Application Conf Version", filters={"conf": conf}, fields=conf_version_fields, order_by="version")
 
 
 @frappe.whitelist(allow_guest=True)
-def app_conf_data(app, conf, version):
+def app_conf_data(conf, version):
 	ver = frappe.get_value("IOT Application Conf Version", filters={"conf": conf, "version": int(version)})
 	if not ver:
 		return {"version": -1, "data": ""}
@@ -88,6 +89,18 @@ def create_app_conf(app, conf_name, description, type='Template', owner_type='Us
 app_conf_fields = ["app", "name", "conf_name", "description", "type", "owner_type", "owner_id"]
 
 
+def add_more_info(conf):
+	version = get_latest_version(conf=conf.name)
+	version_creation = frappe.get_value("IOT Application Conf Version", {"conf": conf.name, "version": version}, "creation")
+	app_name = frappe.get_value("IOT Application", conf.app, "app_name")
+	conf.update({
+		"latest_version": version,
+		"latest_version_creation": version_creation,
+		"app_name": app_name
+	})
+	return conf
+
+
 @frappe.whitelist(allow_guest=True)
 def list_app_conf(app, filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
 	filters = filters or {}
@@ -97,7 +110,9 @@ def list_app_conf(app, filters=None, fields=app_conf_fields, order_by="modified 
 		"public": 1,
 	})
 
-	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+	result = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+
+	return [add_more_info(d) for d in result]
 
 
 @frappe.whitelist()
@@ -108,19 +123,10 @@ def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modif
 		"owner_id": ["=", frappe.session.user]
 	})
 
-	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+	result = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
 
+	return [add_more_info(d) for d in result]
 
-def add_more_info(conf):
-	version = app_conf_version(conf.app, conf.name)
-	version_creation = frappe.get_value("IOT Application Conf Version", {"conf": conf.name, "version": version}, "creation")
-	app_name = frappe.get_value("IOT Application", conf.app, "app_name")
-	conf.update({
-		"latest_version": version,
-		"latest_version_creation": version_creation,
-		"app_name": app_name
-	})
-	return conf
 
 
 @frappe.whitelist()
@@ -156,7 +162,9 @@ def list_conf_company_pri(filters=None, fields=app_conf_fields, order_by="modifi
 		"owner_company": ["in", companies]
 	})
 
-	return frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+	result = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+
+	return [add_more_info(d) for d in result]
 
 
 @frappe.whitelist(allow_guest=True)
