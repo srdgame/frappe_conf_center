@@ -1,0 +1,41 @@
+DocType: IOT Application Conf,All,所有
+DocType: IOT Application Conf,App,应用ID
+DocType: IOT Application Conf Version,App Conf Name,应用配置项名称
+DocType: IOT Application Conf Version,App Name,应用程序名称
+DocType: IOT Application Conf,Application Configuration,应用配置项
+DocType: IOT Application Conf,Cloud Company Group,Cloud 员工组
+DocType: IOT Application Conf Version,Comment,评论
+DocType: IOT Application Conf Version,Conf,配置项
+DocType: IOT Application Conf,Conf Center,配置中心
+DocType: IOT Application Conf,Configuration,配置项
+DocType: IOT Application Conf Version,Data,数据
+DocType: IOT Application Conf,Description,描述
+DocType: IOT Device Conf,Device,设备
+apps/conf_center/conf_center/api.py +192,Device Conf Data not exits!,设备配置数据不存在!
+apps/conf_center/conf_center/conf_center/doctype/iot_device_conf/iot_device_conf.py +18,Device not found!,设备不存在!
+DocType: IOT Device Conf,Hashing,哈希值
+DocType: IOT Application Conf,IOT Application Conf,IOT应用配置项
+DocType: IOT Application Conf Version,IOT Application Conf Version,IOT 应用配置项版本
+DocType: IOT Device Conf,IOT Device Cloud Configuration Item,IOT 设备配置数据云备份
+DocType: IOT Device Conf,IOT Device Conf,IOT 设备配置数据
+DocType: IOT Application Conf,IOT User,IOT 用户
+apps/conf_center/conf_center/api.py +21,Incorrect HTTP Content-Type found {0},检测到不正确的Content-Type {0}
+DocType: IOT Application Conf Version,Information,信息
+apps/conf_center/conf_center/api.py +24,JSON Data not found!,未找到JSON数据
+DocType: IOT Application Conf,Name,名称
+DocType: IOT Application Conf,Other,其他
+DocType: IOT Application Conf,Owner Company,所属公司
+DocType: IOT Application Conf,Owner ID,所属ID
+DocType: IOT Application Conf,Owner Type,所属类型
+DocType: IOT Application Conf,Public,公开
+DocType: IOT Device Conf,Reference,参考
+apps/conf_center/conf_center/api.py +18,Request Method Must be POST!,只接受POST请求
+DocType: IOT Application Conf,System Manager,系统管理员
+DocType: IOT Application Conf,Template,模板
+DocType: IOT Device Conf,Timestamp,时间戳
+DocType: IOT Application Conf,Type,类型
+DocType: IOT Application Conf,Unique Name,
+DocType: IOT Application Conf,User,用户
+DocType: IOT Application Conf Version,Version,版本
+apps/conf_center/conf_center/conf_center/doctype/iot_application_conf_version/iot_application_conf_version.py +22,Version must be bigger than {0},版本号必须高于{0}
+apps/conf_center/conf_center/api.py +209,pong,
