@@ -46,9 +46,9 @@ def get_latest_version(conf):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_versions(conf):
+def get_versions(conf, order_by="version desc"):
 	conf_version_fields = ["name", "version", "app_name", "app_conf_name", "comment", "creation", "owner"]
-	return frappe.get_all("IOT Application Conf Version", filters={"conf": conf}, fields=conf_version_fields, order_by="version")
+	return frappe.get_all("IOT Application Conf Version", filters={"conf": conf}, fields=conf_version_fields, order_by=order_by)
 
 
 @frappe.whitelist(allow_guest=True)
