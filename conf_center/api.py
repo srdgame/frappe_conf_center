@@ -41,18 +41,21 @@ def upload_conf_version(conf, version, data, comment=None):
 
 @frappe.whitelist(allow_guest=True)
 def get_latest_version(conf):
+	valid_auth_code()
 	from conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
 	return get_latest_version(conf)
 
 
 @frappe.whitelist(allow_guest=True)
 def get_versions(conf, order_by="version desc"):
+	valid_auth_code()
 	conf_version_fields = ["name", "version", "app_name", "app_conf_name", "comment", "creation", "owner"]
 	return frappe.get_all("IOT Application Conf Version", filters={"conf": conf}, fields=conf_version_fields, order_by=order_by)
 
 
 @frappe.whitelist(allow_guest=True)
 def app_conf_data(conf, version):
+	# valid_auth_code() -- guest get conf data is allowed now!
 	ver = frappe.get_value("IOT Application Conf Version", filters={"conf": conf, "version": int(version)})
 	if not ver:
 		return {"version": -1, "data": ""}
@@ -103,6 +106,7 @@ def add_more_info(conf):
 
 @frappe.whitelist(allow_guest=True)
 def list_app_conf(app, filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
+	valid_auth_code()
 	filters = filters or {}
 	filters.update({
 		"app": app,
@@ -126,7 +130,6 @@ def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modif
 	result = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
 
 	return [add_more_info(d) for d in result]
-
 
 
 @frappe.whitelist()
@@ -168,6 +171,15 @@ def list_conf_company_pri(filters=None, fields=app_conf_fields, order_by="modifi
 
 
 @frappe.whitelist(allow_guest=True)
+def app_conf_detail(name, fields=app_conf_fields):
+	valid_auth_code()
+	result = frappe.get_all("IOT Application Conf", fileds=fields, filters={"name": name})
+	if len(result) == 1:
+		return add_more_info(result[0])
+	return None
+
+
+@frappe.whitelist(allow_guest=True)
 def upload_device_conf(conf=None):
 	valid_auth_code()
 	conf = conf or get_post_json_data()
@@ -187,6 +199,7 @@ def upload_device_conf(conf=None):
 
 @frappe.whitelist(allow_guest=True)
 def device_conf_data(name):
+	# valid_auth_code() -- guest get conf data is allowed now!
 	doc = frappe.get_doc("IOT Device Conf", name)
 	if not doc:
 		throw(_("Device Conf Data not exits!"))
@@ -201,6 +214,7 @@ def device_conf_data(name):
 
 @frappe.whitelist(allow_guest=True)
 def device_conf_list(sn):
+	valid_auth_code()
 	return frappe.get_all("IOT Device Conf", {"device": sn}, ["name", "timestamp", "data", "hashing"])
 
 
