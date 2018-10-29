@@ -173,7 +173,7 @@ def list_conf_company_pri(filters=None, fields=app_conf_fields, order_by="modifi
 @frappe.whitelist(allow_guest=True)
 def app_conf_detail(name, fields=app_conf_fields):
 	valid_auth_code()
-	result = frappe.get_all("IOT Application Conf", fileds=fields, filters={"name": name})
+	result = frappe.get_all("IOT Application Conf", fields=fields, filters={"name": name})
 	if len(result) == 1:
 		return add_more_info(result[0])
 	return None
