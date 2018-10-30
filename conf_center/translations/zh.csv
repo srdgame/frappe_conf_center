@@ -14,7 +14,7 @@ DocType: IOT Device Conf,Device,设备
 apps/conf_center/conf_center/api.py +192,Device Conf Data not exits!,设备配置数据不存在!
 apps/conf_center/conf_center/conf_center/doctype/iot_device_conf/iot_device_conf.py +18,Device not found!,设备不存在!
 DocType: IOT Device Conf,Hashing,哈希值
-DocType: IOT Application Conf,IOT Application Conf,IOT应用配置项
+DocType: IOT Application Conf,IOT Application Conf,IOT 应用配置项
 DocType: IOT Application Conf Version,IOT Application Conf Version,IOT 应用配置项版本
 DocType: IOT Device Conf,IOT Device Cloud Configuration Item,IOT 设备配置数据云备份
 DocType: IOT Device Conf,IOT Device Conf,IOT 设备配置数据
