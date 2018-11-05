@@ -24,6 +24,13 @@ class IOTApplicationConf(Document):
 		else:
 			self.owner_company = None
 
+	def clean_before_delete(self):
+		if not self.has_permission("write"):
+			raise frappe.PermissionError
+
+		for d in frappe.db.get_values("IOT Application Conf Version", {"conf": self.name}, "name"):
+			frappe.delete_doc("IOT Application Conf Version", d[0])
+
 
 def on_doctype_update():
 	"""Add indexes in `IOT Application Conf`"""
