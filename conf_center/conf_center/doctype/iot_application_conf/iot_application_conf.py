@@ -4,6 +4,7 @@
 
 from __future__ import unicode_literals
 import frappe
+from frappe import throw,_
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 
@@ -18,6 +19,16 @@ class IOTApplicationConf(Document):
 			self.name = make_autoname('IAF.#########')
 
 	def validate(self):
+		if not self.owner_id:
+			if self.owner_type == "Cloud Company Group":
+				from cloud.cloud.doctype.cloud_company.cloud_company import list_user_companies
+				companies = list_user_companies(frappe.session.user)
+				self.owner_id = frappe.get_value("Cloud Company Group", {"company": companies[0], "group_name": "root"})
+			else:
+				self.owner_id = frappe.session.user
+		if not self.owner_id:
+			throw(_("You have not specify the owner, as we cannot detected it!"))
+
 		self.unique_name = self.owner_id + "/" + self.conf_name
 		if self.owner_type == "Cloud Company Group":
 			self.owner_company = frappe.get_value("Cloud Company Group", self.owner_id, "company")
