@@ -47,6 +47,11 @@ def get_latest_version(conf):
 
 
 @frappe.whitelist(allow_guest=True)
+def app_conf_version(conf): ## TODO: delete this
+	return get_latest_version(conf)
+
+
+@frappe.whitelist(allow_guest=True)
 def get_versions(conf, order_by="version desc"):
 	valid_auth_code()
 	conf_version_fields = ["name", "version", "app_name", "app_conf_name", "comment", "creation", "owner"]
