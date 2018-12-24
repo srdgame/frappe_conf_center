@@ -41,7 +41,6 @@ def upload_conf_version(conf, version, data, comment=None):
 
 @frappe.whitelist(allow_guest=True)
 def get_latest_version(conf):
-	valid_auth_code()
 	from conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
 	return get_latest_version(conf)
 
@@ -53,7 +52,6 @@ def app_conf_version(conf): ## TODO: delete this
 
 @frappe.whitelist(allow_guest=True)
 def get_versions(conf, order_by="version desc"):
-	valid_auth_code()
 	conf_version_fields = ["name", "version", "app_name", "app_conf_name", "comment", "creation", "owner"]
 	return frappe.get_all("IOT Application Conf Version", filters={"conf": conf}, fields=conf_version_fields, order_by=order_by)
 
