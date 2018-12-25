@@ -42,6 +42,26 @@ class IOTApplicationConf(Document):
 		for d in frappe.db.get_values("IOT Application Conf Version", {"conf": self.name}, "name"):
 			frappe.delete_doc("IOT Application Conf Version", d[0])
 
+	def append_keywords(self, *keywords):
+		"""Add groups to user"""
+		current_keywords = [d.key for d in self.get("keywords")]
+		for key in keywords:
+			if key in current_keywords:
+				continue
+			self.append("keywords", {"key": key})
+
+	def add_keywords(self, *keywords):
+		"""Add groups to user and save"""
+		self.append_keywords(*keywords)
+		self.save()
+
+	def remove_keywords(self, *keywords):
+		existing_keywords = dict((d.key, d) for d in self.get("keywords"))
+		for key in keywords:
+			if key in existing_keywords:
+				self.get("keywords").remove(existing_keywords[key])
+		self.save()
+
 
 def on_doctype_update():
 	"""Add indexes in `IOT Application Conf`"""
