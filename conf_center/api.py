@@ -105,6 +105,7 @@ def modify_app_conf(name, conf_name=None, description=None, public=1):
 	if public:
 		doc.set("public", public)
 	doc.save()
+	return _("Done!")
 
 
 @frappe.whitelist(allow_guest=True)
