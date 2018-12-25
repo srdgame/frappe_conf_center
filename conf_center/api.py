@@ -221,6 +221,28 @@ def device_conf_list(sn):
 	return frappe.get_all("IOT Device Conf", {"device": sn}, ["name", "timestamp", "data", "hashing"])
 
 
+@frappe.whitelist()
+def add_keywords():
+	if frappe.request.method != "POST":
+		throw(_("Request Method Must be POST!"))
+
+	doc = frappe.get_doc("IOT Application Conf", frappe.form_dict.name)
+	doc.add_keywords(frappe.form_dict.keywords)
+
+	return _("Keywords added!")
+
+
+@frappe.whitelist()
+def remove_keywords():
+	if frappe.request.method != "POST":
+		throw(_("Request Method Must be POST!"))
+
+	doc = frappe.get_doc("IOT Application Conf", frappe.form_dict.name)
+	doc.remove_keywords(frappe.form_dict.keywords)
+
+	return _("Keywords removed!")
+
+
 @frappe.whitelist(allow_guest=True)
 def ping():
 	return _("pong")
