@@ -92,6 +92,28 @@ def create_app_conf(app, conf_name, description, type='Template', owner_type='Us
 	return doc.name
 
 
+@frappe.whitelist(allow_guest=True)
+def modify_app_conf(name, conf_name=None, description=None, public=1):
+	valid_auth_code()
+	doc = frappe.get_doc('IOT Application Conf', name)
+	if conf_name:
+		doc.set("conf_name", conf_name)
+	if description:
+		doc.set("description", description)
+	if description:
+		doc.set("description", description)
+	if public:
+		doc.set("public", public)
+	doc.save()
+
+
+@frappe.whitelist(allow_guest=True)
+def delete_app_conf(name):
+	valid_auth_code()
+	frappe.delete_doc("IOT Application Conf", name)
+	return _("Deleted!")
+
+
 app_conf_fields = ["app", "name", "conf_name", "description", "type", "owner_type", "owner_id"]
 
 
