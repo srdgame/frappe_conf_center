@@ -21,8 +21,10 @@ class IOTApplicationConfVersion(Document):
 			if latest >= self.version:
 				throw(_("Version must be bigger than {0}").format(latest))
 
+	'''
 	def autoname(self):
-		self.name = self.app + "." + str(self.version)
+		self.name = self.conf + "." + str(self.version)
+	'''
 
 
 def on_doctype_update():
