@@ -18,8 +18,11 @@ class IOTApplicationConfVersion(Document):
 			self.data = frappe.get_value("IOT Application Conf Version", self.name, "data")
 		else:
 			latest = get_latest_version(self.conf)
-			if latest > self.version:
+			if latest >= self.version:
 				throw(_("Version must be bigger than {0}").format(latest))
+
+	def autoname(self):
+		self.name = self.app + "." + str(self.version)
 
 
 def on_doctype_update():
