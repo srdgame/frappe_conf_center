@@ -121,11 +121,13 @@ app_conf_fields = ["app", "name", "conf_name", "description", "type", "owner_typ
 def add_more_info(conf):
 	version = get_latest_version(conf=conf.name)
 	version_creation = frappe.get_value("IOT Application Conf Version", {"conf": conf.name, "version": version}, "creation")
-	app_name = frappe.get_value("IOT Application", conf.app, "app_name")
+	app = frappe.get_doc("IOT Application", conf.app)
 	conf.update({
 		"latest_version": version,
 		"latest_version_creation": version_creation,
-		"app_name": app_name
+		"app_name": app.app_name,
+		"app_path": app.app_path,
+		"code_name": app.code_name,
 	})
 	return conf
 
