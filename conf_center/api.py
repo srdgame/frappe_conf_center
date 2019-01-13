@@ -6,8 +6,8 @@ from __future__ import unicode_literals
 import frappe
 import json
 import datetime
-from frappe import throw, msgprint, _
-from frappe.utils import now, get_datetime, convert_utc_to_user_timezone
+from frappe import throw, _
+from frappe.utils import convert_utc_to_user_timezone
 from iot.user_api import valid_auth_code
 from cloud.cloud.doctype.cloud_company.cloud_company import list_user_companies
 from cloud.cloud.doctype.cloud_company_group.cloud_company_group import list_user_groups
@@ -22,7 +22,7 @@ def get_post_json_data():
 	data = frappe.request.get_data()
 	if not data:
 		throw(_("JSON Data not found!"))
-	return json.loads(data)
+	return json.loads(data.decode('utf-8'))
 
 
 @frappe.whitelist(allow_guest=True)
@@ -41,7 +41,7 @@ def upload_conf_version(conf, version, data, comment=None):
 
 @frappe.whitelist(allow_guest=True)
 def get_latest_version(conf):
-	from conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
+	from conf_center.conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
 	return get_latest_version(conf)
 
 
@@ -270,4 +270,4 @@ def remove_keywords():
 
 @frappe.whitelist(allow_guest=True)
 def ping():
-	return _("pong")
+	return _("pong from conf_center.api.ping")
