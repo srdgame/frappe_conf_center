@@ -67,3 +67,19 @@ def on_doctype_update():
 	"""Add indexes in `IOT Application Conf`"""
 	frappe.db.add_index("IOT Application Conf", ["app", "owner_type", "owner_id"])
 	frappe.db.add_index("IOT Application Conf", ["owner_company"])
+
+
+def list_tags(conf):
+	return []
+
+
+def add_tags(conf, *tags):
+	return tags
+
+
+def remove_tags(conf, *tags):
+	return []
+
+
+def clear_tags(conf):
+	return []
