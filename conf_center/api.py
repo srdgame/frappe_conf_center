@@ -41,7 +41,7 @@ def upload_conf_version(conf, version, data, comment=None):
 
 @frappe.whitelist(allow_guest=True)
 def get_latest_version(conf):
-	from .conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
+	from conf_center.conf_center.doctype.iot_application_conf_version.iot_application_conf_version import get_latest_version
 	return get_latest_version(conf)
 
 
