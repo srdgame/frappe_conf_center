@@ -18,7 +18,7 @@ class IOTApplicationConfVersion(Document):
 			self.data = frappe.get_value("IOT Application Conf Version", self.name, "data")
 		else:
 			latest = get_latest_version(self.conf)
-			if int(latest) >= int(self.version):
+			if latest >= int(self.version):
 				throw(_("Version must be bigger than {0}").format(latest))
 
 	'''
@@ -34,4 +34,4 @@ def on_doctype_update():
 
 def get_latest_version(conf):
 	sql = "select max(version) from `tabIOT Application Conf Version` where conf='{0}'".format(conf)
-	return frappe.db.sql(sql)[0][0]
+	return int(frappe.db.sql(sql)[0][0] or 0)
