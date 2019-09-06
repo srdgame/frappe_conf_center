@@ -29,7 +29,7 @@ class IOTApplicationConf(Document):
 		if not self.owner_id:
 			throw(_("You have not specify the owner, as we cannot detected it!"))
 
-		self.unique_name = self.owner_id + "/" + self.conf_name
+		self.unique_name = self.app + '/' + self.owner_id + "/" + self.conf_name
 		if self.owner_type == "Cloud Company Group":
 			self.owner_company = frappe.get_value("Cloud Company Group", self.owner_id, "company")
 		else:
