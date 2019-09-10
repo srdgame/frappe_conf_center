@@ -6,3 +6,4 @@
 tags
 conf_center/docs/current
 *~
+__pycache__
