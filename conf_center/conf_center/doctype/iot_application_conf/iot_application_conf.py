@@ -27,7 +27,9 @@ class IOTApplicationConf(Document):
 			if self.company not in list_user_companies(self.developer):
 				throw(_("You are not in company {0}".format(self.company)))
 
-		dev_comp = self.developer if self.company is None else self.company
+		dev_comp = self.developer
+		if self.company is None:
+			dev_comp =  self.company
 		self.unique_name = self.app + '/' + dev_comp + "/" + self.conf_name
 
 	def clean_before_delete(self):
