@@ -7,6 +7,7 @@ import frappe
 from frappe import throw,_
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
+from cloud.cloud.doctype.cloud_company.cloud_company import list_user_companies
 
 
 class IOTApplicationConf(Document):
@@ -19,21 +20,15 @@ class IOTApplicationConf(Document):
 			self.name = make_autoname('IAF.#########')
 
 	def validate(self):
-		if not self.owner_id:
-			if self.owner_type == "Cloud Company Group":
-				from cloud.cloud.doctype.cloud_company.cloud_company import list_user_companies
-				companies = list_user_companies(frappe.session.user)
-				self.owner_id = frappe.get_value("Cloud Company Group", {"company": companies[0], "group_name": "root"})
-			else:
-				self.owner_id = frappe.session.user
-		if not self.owner_id:
-			throw(_("You have not specify the owner, as we cannot detected it!"))
+		if not self.developer and self.is_new():
+			self.developer = frappe.session.user
 
-		self.unique_name = self.app + '/' + self.owner_id + "/" + self.conf_name
-		if self.owner_type == "Cloud Company Group":
-			self.owner_company = frappe.get_value("Cloud Company Group", self.owner_id, "company")
-		else:
-			self.owner_company = None
+		if self.company is not None:
+			if self.company not in list_user_companies(self.developer):
+				throw(_("You are not in company {0}".format(self.company)))
+
+		dev_comp = self.developer if self.company is None else self.company
+		self.unique_name = self.app + '/' + dev_comp + "/" + self.conf_name
 
 	def clean_before_delete(self):
 		if not self.has_permission("write"):
@@ -45,5 +40,4 @@ class IOTApplicationConf(Document):
 
 def on_doctype_update():
 	"""Add indexes in `IOT Application Conf`"""
-	frappe.db.add_index("IOT Application Conf", ["app", "owner_type", "owner_id"])
-	frappe.db.add_index("IOT Application Conf", ["owner_company"])
+	frappe.db.add_index("IOT Application Conf", ["app", "company", "developer"])

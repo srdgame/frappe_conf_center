@@ -12,9 +12,8 @@
   "description",
   "type",
   "cb",
-  "owner_type",
-  "owner_id",
-  "owner_company",
+  "developer",
+  "company",
   "public",
   "unique_name"
  ],
@@ -54,28 +53,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "owner_type",
-   "fieldtype": "Select",
-   "label": "Owner Type",
-   "options": "Cloud Company Group\nUser",
-   "reqd": 1
-  },
-  {
-   "fieldname": "owner_id",
-   "fieldtype": "Dynamic Link",
-   "in_list_view": 1,
-   "label": "Owner ID",
-   "options": "owner_type",
-   "reqd": 1
-  },
-  {
-   "fieldname": "owner_company",
-   "fieldtype": "Link",
-   "label": "Owner Company",
-   "options": "Cloud Company",
-   "read_only": 1
-  },
-  {
    "default": "0",
    "fieldname": "public",
    "fieldtype": "Check",
@@ -89,9 +66,25 @@
    "hidden": 1,
    "label": "Unique Name",
    "unique": 1
+  },
+  {
+   "fieldname": "developer",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Developer",
+   "options": "User",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Cloud Company",
+   "read_only": 1
   }
  ],
- "modified": "2019-11-08 11:04:11.921451",
+ "modified": "2019-12-03 13:38:28.242237",
  "modified_by": "Administrator",
  "module": "Conf Center",
  "name": "IOT Application Conf",

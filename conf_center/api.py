@@ -70,10 +70,8 @@ def app_conf_data(conf, version):
 
 
 @frappe.whitelist(allow_guest=True)
-def create_app_conf(app, conf_name, description, type='Template', owner_type='User', owner_id=None, public=1):
+def create_app_conf(app, conf_name, description, type='Template', company=None, public=1):
 	valid_auth_code()
-	if owner_type == "User":
-		owner_id = frappe.session.user
 
 	if public is True:
 		public = 1
@@ -84,8 +82,8 @@ def create_app_conf(app, conf_name, description, type='Template', owner_type='Us
 		"conf_name": conf_name,
 		"description": description,
 		"type": type,
-		"owner_type": owner_type,
-		"owner_id": owner_id,
+		"developer": frappe.session.user,
+		"company": company,
 		"public": public
 	}
 	doc = frappe.get_doc(conf_data).insert()
@@ -115,7 +113,7 @@ def delete_app_conf(name):
 	return _("Deleted!")
 
 
-app_conf_fields = ["app", "name", "conf_name", "description", "type", "owner_type", "owner_id"]
+app_conf_fields = ["app", "name", "conf_name", "description", "type", "company", "developer"]
 
 
 def add_more_info(conf):
@@ -138,7 +136,7 @@ def list_app_conf(app, filters=None, fields=app_conf_fields, order_by="modified 
 	filters = filters or {}
 	filters.update({
 		"app": app,
-		"owner_id": ["!=", 'Administrator'],
+		"developer": ["!=", 'Administrator'],
 		"public": 1,
 	})
 
@@ -152,36 +150,36 @@ def list_app_conf_pri(app, filters=None, fields=app_conf_fields, order_by="modif
 	filters = filters or {}
 	filters.update({
 		"app": app,
-		"owner_id": ["=", frappe.session.user]
+		"developer": frappe.session.user
 	})
 
 	result = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
 
 	return [add_more_info(d) for d in result]
 
-
-@frappe.whitelist()
-def list_private_conf(filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
-	filters = filters or {}
-	filters.update({
-		"owner_id": ["=", frappe.session.user]
-	})
-
-	pri_list = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
-
-	groups = [d.name for d in list_user_groups(frappe.session.user)]
-	filters.update({
-		"owner_id": ["in", groups]
-	})
-	group_list = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
-
-	pri_list = [add_more_info(d) for d in pri_list]
-	group_list = [add_more_info(d) for d in group_list]
-
-	return {
-		"private": pri_list,
-		"company": group_list,
-	}
+#
+# @frappe.whitelist()
+# def list_private_conf(filters=None, fields=app_conf_fields, order_by="modified desc", start=0, limit=40):
+# 	filters = filters or {}
+# 	filters.update({
+# 		"developer": frappe.session.user
+# 	})
+#
+# 	pri_list = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+#
+# 	groups = [d.name for d in list_user_groups(frappe.session.user)]
+# 	filters.update({
+# 		"owner_id": ["in", groups]
+# 	})
+# 	group_list = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
+#
+# 	pri_list = [add_more_info(d) for d in pri_list]
+# 	group_list = [add_more_info(d) for d in group_list]
+#
+# 	return {
+# 		"private": pri_list,
+# 		"company": group_list,
+# 	}
 
 
 @frappe.whitelist()
@@ -190,7 +188,7 @@ def list_conf_company_pri(filters=None, fields=app_conf_fields, order_by="modifi
 	companies = list_user_companies()
 
 	filters.update({
-		"owner_company": ["in", companies]
+		"company": ["in", companies]
 	})
 
 	result = frappe.get_all("IOT Application Conf", fields=fields, filters=filters, order_by=order_by, start=start, limit=limit)
