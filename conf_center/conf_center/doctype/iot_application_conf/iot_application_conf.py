@@ -28,7 +28,7 @@ class IOTApplicationConf(Document):
 				throw(_("You are not in company {0}".format(self.company)))
 
 		dev_comp = self.developer
-		if self.company is None:
+		if self.company is not None:
 			dev_comp =  self.company
 		self.unique_name = self.app + '/' + dev_comp + "/" + self.conf_name
 
