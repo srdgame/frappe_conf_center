@@ -23,4 +23,4 @@ class IOTDeviceConf(Document):
 
 def on_doctype_update():
 	"""Add indexes in `IOT Device Conf`"""
-	frappe.db.add_index("IOT Device Conf", ["device", "company", "developer"])
+	frappe.db.add_index("IOT Device Conf", ["device", "owner_company"])
