@@ -7,6 +7,9 @@ def execute():
 	frappe.reload_doc('conf_center', 'doctype', 'iot_application_conf')
 	table_columns = frappe.db.get_table_columns("IOT Application Conf")
 
+	if not table_columns:
+		return
+
 	if "developer" in table_columns:
 		frappe.db.sql('''
 			update `tabIOT Application Conf`
